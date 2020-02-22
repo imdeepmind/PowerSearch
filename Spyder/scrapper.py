@@ -1,5 +1,7 @@
 import requests
-import bs4
+import re
+
+from bs4 import BeautifulSoup
 
 from logger import logger
 
@@ -33,12 +35,34 @@ class Scrapper:
         logger.exception("Something went wrong")
     
     return data
+
+  def __extract_correct_url(self, url, link):
+    if re.search('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', link):
+      return link
+
+    if url[-1] == '/' or link[0] == '/':
+      return url + link
+
+    return url + '/' + link
+
+  def __extract_data(self, data, url):
+    logger.info('Extracting data from the url: {}'.format(url))
+
+    soup = BeautifulSoup(data, 'lxml')
+
+    title = soup.find('title').text
+    description = soup.find_all('meta', attrs={'name': 'description'})[0]['content']
+
+    urls = []
+
+    for a in soup.find_all('a'):
+      link = a['href']
+      urls.append(self.__extract_correct_url(url, link))
+
+    return title, description, urls
   
   def scrap(self, url):
     data = self.__load_url(url)
-    print(data)
+    title, description, urls = self.__extract_data(data, url)
 
-scrapper = Scrapper()
-scrapper.scrap("https://imdeepmind.com")
-
-  
+    return title, description, urls  
