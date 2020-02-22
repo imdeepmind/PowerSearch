@@ -6,7 +6,20 @@ from bs4 import BeautifulSoup
 from logger import logger
 
 class Scrapper:
+  """
+    The Scrapper class in responsible for scrapping websites and extracting the title tag, meta description tag and all the anchor tags
+
+  """
+
   def __init__(self, retry=3):
+    """
+      Constructor of the class Scrapper, used to setting up the Scrapper class
+
+      Params:
+        retry: Int
+          Number of retry for downloading websites over the internet, the value need to be a number greater that 0, default and recommended value is 3
+
+    """
     super().__init__()
 
     if type(retry) not in [int]:
@@ -69,12 +82,20 @@ class Scrapper:
     return title, description, urls
   
   def scrap(self, url):
+    """
+      This method in the class Scrapper is responsible for scrapping the websites.
+
+      Params:
+        url: string
+          URL of the website, that needed to be scrapped
+
+    """
     if type(url) not in [str]:
       raise ValueError("The value for url needed to be of type string")
 
     if len(url) < 1:
       raise ValueError("No URL provided")
-    
+
     data = self.__load_url(url)
     title, description, urls = self.__extract_data(data, url)
 
