@@ -37,22 +37,16 @@ class Scrapper:
 
     while count < self.retry and not success:
       count += 1
-      try:
-        logger.info("Trying to load content from the URL: {}".format(url))
-        r = requests.get(url)
 
-        if r.ok:
-          data = r.text
-          success = True
-          logger.info("Success downloaded the url: {}".format(url))
-        else:
-          raise ValueError("Not getting correct response from the target server, URL: {} Status Code: {}".format(url, r.status_code))
-      
-      except ValueError as ex:
-        logger.error("Something is wrong with the url {}".format(url))
+      logger.info("Trying to load content from the URL: {}".format(url))
+      r = requests.get(url)
 
-      except Exception as ex:
-        logger.exception("Something went wrong")
+      if r.ok:
+        data = r.text
+        success = True
+        logger.info("Success downloaded the url: {}".format(url))
+      else:
+        raise ValueError("Not getting correct response from the target server, URL: {} Status Code: {}".format(url, r.status_code))
     
     return data
 
@@ -67,13 +61,17 @@ class Scrapper:
 
   def __extract_data(self, data, url):
     logger.info('Extracting data from the url: {}'.format(url))
+    title = ''
+    description = ''
+    urls = []
 
     soup = BeautifulSoup(data, 'lxml')
 
     title = soup.find('title').text
-    description = soup.find('meta', attrs={'name': 'description'})['content']
 
-    urls = []
+    description_tag = soup.find('meta', attrs={'name': 'description'})
+    if description_tag:
+      description = description_tag['content']
 
     for a in soup.find_all('a'):
       link = a['href']
@@ -90,7 +88,6 @@ class Scrapper:
           URL of the website, that needed to be scrapped
 
     """
-
     logger.info('URL received {}'.format(url))
 
     if type(url) not in [str]:

@@ -21,6 +21,7 @@ class TestScrapper(unittest.TestCase):
     self.assertIs(type(scrapper.scrap('https://google.com')), tuple)
     self.assertIs(type(scrapper.scrap('https://microsoft.com')), tuple)
     self.assertIs(type(scrapper.scrap('https://wikipedia.org')), tuple)
-    self.assertIs(type(scrapper.scrap('https://wikipedasdasdkjia.org')), tuple)
-    self.assertIs(type(scrapper.scrap('https://tryuio.comad')), tuple)
+
+    self.assertRaises(Exception, scrapper.scrap, 'https://wikipedasdasdkjia.org')
+    self.assertRaises(Exception, scrapper.scrap, 'https://tryuio.comad')
     
