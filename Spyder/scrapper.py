@@ -71,7 +71,7 @@ class Scrapper:
     soup = BeautifulSoup(data, 'lxml')
 
     title = soup.find('title').text
-    description = soup.find_all('meta', attrs={'name': 'description'})[0]['content']
+    description = soup.find('meta', attrs={'name': 'description'})['content']
 
     urls = []
 
@@ -90,6 +90,9 @@ class Scrapper:
           URL of the website, that needed to be scrapped
 
     """
+
+    logger.info('URL received {}'.format(url))
+
     if type(url) not in [str]:
       raise ValueError("The value for url needed to be of type string")
 
