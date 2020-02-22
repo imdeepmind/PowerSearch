@@ -8,6 +8,13 @@ from logger import logger
 class Scrapper:
   def __init__(self, retry=3):
     super().__init__()
+
+    if type(retry) not in [int]:
+      raise ValueError("The value for retry needed to be of type integer")
+
+    if retry < 1:
+      raise ValueError("The value for retry needed to be greater number bigger then 0")
+
     self.retry = retry
   
   def __load_url(self, url):
@@ -62,6 +69,12 @@ class Scrapper:
     return title, description, urls
   
   def scrap(self, url):
+    if type(url) not in [str]:
+      raise ValueError("The value for url needed to be of type string")
+
+    if len(url) < 1:
+      raise ValueError("No URL provided")
+    
     data = self.__load_url(url)
     title, description, urls = self.__extract_data(data, url)
 
