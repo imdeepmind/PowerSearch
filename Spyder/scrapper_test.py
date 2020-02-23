@@ -1,27 +1,27 @@
 import unittest
 
-from scrapper import Scrapper
+from Scraper import Scraper
 
-class TestScrapper(unittest.TestCase):
-  def test_scrapper_constructor(self):
-    self.assertRaises(ValueError, Scrapper, 'hello')
-    self.assertRaises(ValueError, Scrapper, [])
-    self.assertRaises(ValueError, Scrapper, False)
-    self.assertRaises(ValueError, Scrapper, -5)
-    self.assertRaises(ValueError, Scrapper, -98j)
-    self.assertRaises(ValueError, Scrapper, 5.32)
+class TestScraper(unittest.TestCase):
+  def test_Scraper_constructor(self):
+    self.assertRaises(ValueError, Scraper, 'hello')
+    self.assertRaises(ValueError, Scraper, [])
+    self.assertRaises(ValueError, Scraper, False)
+    self.assertRaises(ValueError, Scraper, -5)
+    self.assertRaises(ValueError, Scraper, -98j)
+    self.assertRaises(ValueError, Scraper, 5.32)
   
-  def test_scrapper_scrap(self):
-    scrapper = Scrapper(3)
-    self.assertRaises(ValueError, scrapper.scrap, 12)
-    self.assertRaises(ValueError, scrapper.scrap, [])
-    self.assertRaises(ValueError, scrapper.scrap, False)
-    self.assertIs(type(scrapper.scrap('https://imdeepmind.com')), tuple)
-    self.assertIs(type(scrapper.scrap('https://facebook.com')), tuple)
-    self.assertIs(type(scrapper.scrap('https://google.com')), tuple)
-    self.assertIs(type(scrapper.scrap('https://microsoft.com')), tuple)
-    self.assertIs(type(scrapper.scrap('https://wikipedia.org')), tuple)
+  def test_Scraper_scrap(self):
+    Scraper = Scraper(3)
+    self.assertRaises(ValueError, Scraper.scrap, 12)
+    self.assertRaises(ValueError, Scraper.scrap, [])
+    self.assertRaises(ValueError, Scraper.scrap, False)
+    self.assertIs(type(Scraper.scrap('https://imdeepmind.com')), tuple)
+    self.assertIs(type(Scraper.scrap('https://facebook.com')), tuple)
+    self.assertIs(type(Scraper.scrap('https://google.com')), tuple)
+    self.assertIs(type(Scraper.scrap('https://microsoft.com')), tuple)
+    self.assertIs(type(Scraper.scrap('https://wikipedia.org')), tuple)
 
-    self.assertRaises(Exception, scrapper.scrap, 'https://wikipedasdasdkjia.org')
-    self.assertRaises(Exception, scrapper.scrap, 'https://tryuio.comad')
+    self.assertRaises(Exception, Scraper.scrap, 'https://wikipedasdasdkjia.org')
+    self.assertRaises(Exception, Scraper.scrap, 'https://tryuio.comad')
     
