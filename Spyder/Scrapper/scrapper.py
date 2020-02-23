@@ -1,9 +1,6 @@
 import requests
-import re
 
 from bs4 import BeautifulSoup
-
-from logger import logger
 
 class Scrapper:
   """
@@ -11,7 +8,7 @@ class Scrapper:
 
   """
 
-  def __init__(self, retry=3):
+  def __init__(self, logger, retry=3):
     """
       Constructor of the class Scrapper, used to setting up the Scrapper class
 
@@ -29,6 +26,7 @@ class Scrapper:
       raise ValueError("The value for retry needed to be greater number bigger then 0")
 
     self.retry = retry
+    self.logger = logger
   
   def __load_url(self, url):
     count = 0
@@ -38,29 +36,20 @@ class Scrapper:
     while count < self.retry and not success:
       count += 1
 
-      logger.info("Trying to load content from the URL: {}".format(url))
+      self.logger.info("Trying to load content from the URL: {}".format(url))
       r = requests.get(url)
 
       if r.ok:
         data = r.text
         success = True
-        logger.info("Success downloaded the url: {}".format(url))
+        self.logger.info("Success downloaded the url: {}".format(url))
       else:
         raise ValueError("Not getting correct response from the target server, URL: {} Status Code: {}".format(url, r.status_code))
     
     return data
 
-  def __extract_correct_url(self, url, link):
-    if re.search('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', link):
-      return link
-
-    if url[-1] == '/' or link[0] == '/':
-      return url + link
-
-    return url + '/' + link
-
   def __extract_data(self, data, url):
-    logger.info('Extracting data from the url: {}'.format(url))
+    self.logger.info('Extracting data from the url: {}'.format(url))
     title = ''
     description = ''
     urls = []
@@ -75,7 +64,7 @@ class Scrapper:
 
     for a in soup.find_all('a'):
       link = a['href']
-      urls.append(self.__extract_correct_url(url, link))
+      urls.append(link)
 
     return title, description, urls
   
@@ -88,7 +77,7 @@ class Scrapper:
           URL of the website, that needed to be scrapped
 
     """
-    logger.info('URL received {}'.format(url))
+    self.logger.info('URL received {}'.format(url))
 
     if type(url) not in [str]:
       raise ValueError("The value for url needed to be of type string")
