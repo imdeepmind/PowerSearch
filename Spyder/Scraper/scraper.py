@@ -2,13 +2,15 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from logger.logger import logger
+
 class Scrapper:
   """
     The Scrapper class in responsible for scrapping websites and extracting the title tag, meta description tag and all the anchor tags
 
   """
 
-  def __init__(self, logger, retry=3):
+  def __init__(self, retry=3):
     """
       Constructor of the class Scrapper, used to setting up the Scrapper class
 
@@ -26,7 +28,6 @@ class Scrapper:
       raise ValueError("The value for retry needed to be greater number bigger then 0")
 
     self.retry = retry
-    self.logger = logger
   
   def __load_url(self, url):
     count = 0
@@ -36,20 +37,20 @@ class Scrapper:
     while count < self.retry and not success:
       count += 1
 
-      self.logger.info("Trying to load content from the URL: {}".format(url))
+      logger.info("Trying to load content from the URL: {}".format(url))
       r = requests.get(url)
 
       if r.ok:
         data = r.text
         success = True
-        self.logger.info("Success downloaded the url: {}".format(url))
+        logger.info("Success downloaded the url: {}".format(url))
       else:
         raise ValueError("Not getting correct response from the target server, URL: {} Status Code: {}".format(url, r.status_code))
     
     return data
 
   def __extract_data(self, data, url):
-    self.logger.info('Extracting data from the url: {}'.format(url))
+    logger.info('Extracting data from the url: {}'.format(url))
     title = ''
     description = ''
     urls = []
@@ -77,7 +78,7 @@ class Scrapper:
           URL of the website, that needed to be scrapped
 
     """
-    self.logger.info('URL received {}'.format(url))
+    logger.info('URL received {}'.format(url))
 
     if type(url) not in [str]:
       raise ValueError("The value for url needed to be of type string")
